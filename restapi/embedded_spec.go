@@ -32,7 +32,7 @@ func init() {
     "description": "Essa é uma API de autenticação simples, criada com o intuido de apenas validar as credenciais dos usuários.",
     "title": "Módulo de login",
     "contact": {
-      "name": "Joel Felipa de Oliveira Gaya",
+      "name": "Joel Felipe de Oliveira Gaya",
       "email": "joelfelipe94@gmail.com"
     },
     "version": "1.0.0"
@@ -124,7 +124,7 @@ func init() {
     "description": "Essa é uma API de autenticação simples, criada com o intuido de apenas validar as credenciais dos usuários.",
     "title": "Módulo de login",
     "contact": {
-      "name": "Joel Felipa de Oliveira Gaya",
+      "name": "Joel Felipe de Oliveira Gaya",
       "email": "joelfelipe94@gmail.com"
     },
     "version": "1.0.0"

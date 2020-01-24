@@ -35,7 +35,7 @@ func configureAPI(api *operations.MóduloDeLoginAPI) http.Handler {
 
 	if api.LoginHandler == nil {
 		api.LoginHandler = operations.LoginHandlerFunc(func(params operations.LoginParams) middleware.Responder {
-			return middleware.NotImplemented("operation .Login has not yet been implemented")
+			return operations.NewLoginOK()
 		})
 	}
 
