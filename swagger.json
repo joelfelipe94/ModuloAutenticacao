@@ -1,0 +1,92 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Essa é uma API de autenticação simples, criada com o intuido de apenas validar as credenciais dos usuários.",
+    "title": "Módulo de login",
+    "contact": {
+      "name": "Joel Felipe de Oliveira Gaya",
+      "email": "joelfelipe94@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "basePath": "/api",
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Verifica se as credenciais dos usuários estão corretas.",
+        "operationId": "login",
+        "parameters": [
+          {
+            "description": "Credenciais",
+            "name": "Credenciais",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Credenciais"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso"
+          },
+          "401": {
+          "description": "Usuário não autorizado"
+          },
+          "default": {
+            "description": "Erro inesperado",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Erro": {
+      "type": "object",
+      "required": [
+        "codigo",
+        "menssagem"
+      ],
+      "properties": {
+        "codigo": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "menssagem": {
+          "type": "string"
+        }
+      }
+    },
+    "Credenciais": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "usuario",
+            "senha"
+          ],
+          "properties": {
+            "usuario": {
+              "type": "string"
+            },
+            "senha": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
