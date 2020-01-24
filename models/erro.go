@@ -8,9 +8,7 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // Erro erro
@@ -18,47 +16,14 @@ import (
 type Erro struct {
 
 	// codigo
-	// Required: true
-	Codigo *int32 `json:"codigo"`
+	Codigo int64 `json:"codigo,omitempty"`
 
-	// menssagem
-	// Required: true
-	Menssagem *string `json:"menssagem"`
+	// mensagem
+	Mensagem string `json:"mensagem,omitempty"`
 }
 
 // Validate validates this erro
 func (m *Erro) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCodigo(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMenssagem(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Erro) validateCodigo(formats strfmt.Registry) error {
-
-	if err := validate.Required("codigo", "body", m.Codigo); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Erro) validateMenssagem(formats strfmt.Registry) error {
-
-	if err := validate.Required("menssagem", "body", m.Menssagem); err != nil {
-		return err
-	}
-
 	return nil
 }
 

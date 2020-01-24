@@ -4,12 +4,15 @@ package restapi
 
 import (
 	"crypto/tls"
+	"database/sql"
+	"fmt"
 	"net/http"
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
-
+	_ "github.com/go-sql-driver/mysql" //não sei pq precisa
+	"github.com/joelfelipe94/ModuloAutenticacao/models"
 	"github.com/joelfelipe94/ModuloAutenticacao/restapi/operations"
 )
 
@@ -32,12 +35,22 @@ func configureAPI(api *operations.MóduloDeLoginAPI) http.Handler {
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
+	api.LoginHandler = operations.LoginHandlerFunc(func(params operations.LoginParams) middleware.Responder {
+		var nome string
+		var senha string
+		db, err := sql.Open("mysql", "joel:12345@/SistemaAutenticacao")
+		if err != nil {
+			fmt.Println(err.Error())
+			mensagem := models.Erro{Codigo: 500, Mensagem: err.Error()}
+			return operations.NewLoginDefault(500).WithPayload(&mensagem)
+		}
 
-	if api.LoginHandler == nil {
-		api.LoginHandler = operations.LoginHandlerFunc(func(params operations.LoginParams) middleware.Responder {
+		db.QueryRow("SELECT nome, senha FROM usuarios where nome = ?", *params.Credenciais.Usuario).Scan(&nome, &senha)
+		if *params.Credenciais.Usuario == nome && *params.Credenciais.Senha == senha {
 			return operations.NewLoginOK()
-		})
-	}
+		}
+		return operations.NewLoginUnauthorized()
+	})
 
 	api.ServerShutdown = func() {}
 

@@ -93,16 +93,12 @@ func init() {
     },
     "Erro": {
       "type": "object",
-      "required": [
-        "codigo",
-        "menssagem"
-      ],
       "properties": {
         "codigo": {
           "type": "integer",
-          "format": "int32"
+          "format": "int"
         },
-        "menssagem": {
+        "mensagem": {
           "type": "string"
         }
       }
@@ -185,16 +181,12 @@ func init() {
     },
     "Erro": {
       "type": "object",
-      "required": [
-        "codigo",
-        "menssagem"
-      ],
       "properties": {
         "codigo": {
           "type": "integer",
-          "format": "int32"
+          "format": "int"
         },
-        "menssagem": {
+        "mensagem": {
           "type": "string"
         }
       }
