@@ -4,14 +4,13 @@ package restapi
 
 import (
 	"crypto/tls"
-	"database/sql"
-	"fmt"
 	"net/http"
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
-	_ "github.com/go-sql-driver/mysql" //não sei pq precisa
+	_ "github.com/go-sql-driver/mysql" //não é rerenciado diretamente, mas precisa ser importado
+	"github.com/joelfelipe94/ModuloAutenticacao/gerentedados"
 	"github.com/joelfelipe94/ModuloAutenticacao/models"
 	"github.com/joelfelipe94/ModuloAutenticacao/restapi/operations"
 )
@@ -36,20 +35,17 @@ func configureAPI(api *operations.MóduloDeLoginAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 	api.LoginHandler = operations.LoginHandlerFunc(func(params operations.LoginParams) middleware.Responder {
-		var nome string
-		var senha string
-		db, err := sql.Open("mysql", "joel:12345@/SistemaAutenticacao")
-		if err != nil {
-			fmt.Println(err.Error())
-			mensagem := models.Erro{Codigo: 500, Mensagem: err.Error()}
-			return operations.NewLoginDefault(500).WithPayload(&mensagem)
-		}
-
-		db.QueryRow("SELECT nome, senha FROM usuarios where nome = ?", *params.Credenciais.Usuario).Scan(&nome, &senha)
-		if *params.Credenciais.Usuario == nome && *params.Credenciais.Senha == senha {
+		nome := *params.Credenciais.Usuario
+		senha := *params.Credenciais.Senha
+		status, err := gerentedados.ChecaUsuarioSenha(nome, senha)
+		if status == 200 {
 			return operations.NewLoginOK()
 		}
-		return operations.NewLoginUnauthorized()
+		if status == 401 {
+			return operations.NewLoginUnauthorized()
+		}
+		mensagem := models.Erro{Codigo: int64(status), Mensagem: err.Error()}
+		return operations.NewLoginDefault(status).WithPayload(&mensagem)
 	})
 
 	api.ServerShutdown = func() {}
