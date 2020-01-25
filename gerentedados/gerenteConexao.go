@@ -41,7 +41,7 @@ func getConexao() (*sql.DB, error) {
 	db := poolConexoesDB[conexaoAtual]
 	if db == nil {
 		log.Println("criou nova conexão")
-		db, err = sql.Open("mysql", stringdeConexao)
+		db, err = sql.Open("mysql", StringdeConexao)
 	}
 	poolConexoesDB[conexaoAtual] = db
 	conexaoAtual = (conexaoAtual + 1) % maxConexoesBanco

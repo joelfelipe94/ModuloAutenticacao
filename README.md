@@ -41,6 +41,10 @@ Para o acesso ao banco foi utilizada uma pool de conexões. Elas são alocadas n
 Dois cuidados com a pool de conexões deveriam ser tomados mas ficaram de fora nesse exemplo. O primeiro é evitar que a mesma conexão seja dada a duas threads. Isso poderia ser alcançado com um array que diz se a conexão está em uso ou usando um valor limite para a próxima conexão que avançaria conforme as conexões foram liberadas. O segundo, é garantir que a conexão continua ativa.
 Esses cuidados não foram tomas dor limitações de tempo e imprevistos (alarme da vizinha tocando por quase duas horas). 
 ## Teste de carga 
-Para facilitar a realização de testes de carga foi criado o arquivo `teste/testedeCarga.go`. Ele permite a execução de um teste com x requisições por segundo e y threads de forma simples. Basta executar o seguinte comando `go run testedeCarga.go -numeroThreads=200 -postsPorSegundo=30`, para esses parâmetros em especifico o resultado pode ser visto em `teste/infoTesteCargaMesmoLogin.log`. Vale ressaltar que o teste conecta em `localhost` na porta `56666`.
+Para facilitar a realização de testes de carga foi criado o arquivo `teste/testedeCarga.go`. Ele permite a execução de um teste com x requisições por segundo e y threads de forma simples. Basta executar o seguinte comando `go run teste/testedeCarga.go -numeroThreads=200 -postsPorSegundo=30`, o resultado dele pode ser visto em `teste/usuarioFixo.log`.O resultado mencionado anteriormente é para a mesma requisição executada diversas vezes. No entanto, isso faz com que muitas requisições busquem dados da cache.
+Para consultar dados com usuarios aleatórios basta executar o comando `go run teste/testedeCarga.go-numeroThreads=200 -postsPorSegundo=30 -usuarioVariavel`. O resultado deste teste pode ser encontrado no arquivo `teste/usuarioVariavel.log`.
+
+Os dois casos de teste mencionados acima são pouco realistas mas dão uma ideia de como a API se comportaria em casos extremos. No primeiro muitas requisições trazem dados da cache e na segunda o banco é acessado diversas vezes. 
+
 
 
