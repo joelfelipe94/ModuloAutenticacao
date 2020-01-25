@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -43,8 +45,22 @@ func enviaPostHTTP(requestBody *bytes.Buffer) {
 }
 
 func main() {
-	var numeroThreads int = 2
-	var postsPorSegundo int = 4
+	//Cria arquivo de log
+	file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	log.SetOutput(file)
+
+	//Lê parametros do terminal
+	numeroThreadsPtr := flag.Int("numeroThreads", 1, "Passe o numero de threads para o test")
+	postsPorSegundoPtr := flag.Int("postsPorSegundo", 1,
+		"Passe o numero de requests que cada thread faz por segundo")
+	flag.Parse()
+	//Inica as threads  aguarda o término
+	numeroThreads := *numeroThreadsPtr
+	postsPorSegundo := *postsPorSegundoPtr
 	totalRequests := numeroThreads * postsPorSegundo
 	for indexThread := 0; indexThread < numeroThreads; indexThread++ {
 		go enviaNPostsHTTPPorSegundo(postsPorSegundo)
